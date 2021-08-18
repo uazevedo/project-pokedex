@@ -1,28 +1,23 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-app>
+      <div id="nav">
+        <v-navigation-drawer app>
+          <router-link to="/pokemon">Pokemon</router-link> <br />
+          <router-link to="/pokemon/1">Pokemon Detail</router-link> <br />
+          <router-link to="/home">Pokemon</router-link> <br />
+        </v-navigation-drawer>
+      </div>
+      <v-main>
+        <v-container fluid>
+          <v-row>
+            <v-col lg="6" offset-lg="3" sm="8" offset-sm="2" xs="12" offset-xs="0">
+              <router-view />
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
+    </v-app>
   </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
