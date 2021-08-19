@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card v-if="pokemon" class="mx-auto">
-      <v-sheet :color="bgElementColors.get(pokemon.types[0].type.name)">
+    <v-card v-if="!loading" class="mx-auto">
+      <v-sheet :color="bgElementColors.get(pokemonType)">
         <v-row no-gutters align="center">
           <router-link to="/pokemon">
             <v-btn depressed icon class="float-start">
@@ -14,7 +14,7 @@
                 <v-list-item-subtitle
                   class="pt-12 pb-0 font-weight-bold pl-5 text-h6"
                 >
-                  {{ pokemonId }}
+                  <span color="white" class="text--secondary" >{{ pokemonId }}</span>
                 </v-list-item-subtitle>
                 <v-list-item-title
                   class="
@@ -32,16 +32,15 @@
                   <v-chip-group>
                     <v-chip
                       label
-                      class="text-capitalize px-2"
+                      class="text-capitalize px-2 font-weight-bold"
                       text-color="white"
                       v-for="(type, i) in pokemon.types"
                       :key="i"
                       :color="elementColors.get(type.type.name)"
                     >
-                      <!-- <v-icon class="mx-1 white--text">$vuetify.icons.custom</v-icon> -->
                       <v-avatar dark class="mr-1">
-                        <v-img
-                          :src="require(`@/assets/types/${type.type.name}.svg`)"
+                        <v-img 
+                          :style="chipSvgMas(type.type.name)"
                         ></v-img>
                       </v-avatar>
                       {{ type.type.name }}
@@ -54,10 +53,11 @@
 
           <v-col cols="6">
             <v-img
-              height="250"
+              max-height="245"
               :src="pokemonSprite"
               :alt="pokemon.name"
-              class="pr-12"
+              class="pr-12 ma-10"
+              contain
             >
             </v-img>
           </v-col>
@@ -65,29 +65,22 @@
       </v-sheet>
     </v-card>
 
-    <v-card color="white" class="mx-auto rounded-xl mt-n5">
-      <v-card-text class="">
-        <v-list v-if="pokemon.stats">
-          <v-card-title class="text-h6 green--text text--accent-4">Base Status</v-card-title>
-          <v-list-item-group>
-            <v-list-item v-for="(stats, i) in pokemon.stats" :key="i" class="grey--text text--darken-2">
-              <v-list-item-title class="text-capitalize">
-                {{ stats.stat.name }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ stats.base_stat }}
-              </v-list-item-subtitle>
-              <v-spacer></v-spacer>
-              <v-list-item-subtitle>
-                100
-              </v-list-item-subtitle>
-              <v-list-item-subtitle>
-                200
-              </v-list-item-subtitle>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card-text>
+    <v-card color="white" class="mx-auto rounded-xl mt-n5" v-if="!loading">
+
+      <v-tabs
+      fixed-tabs
+      center-active
+      v-model="tab">
+        <v-tab v-for="(tab,i) in tabs" :key="i">{{tab.label}}</v-tab>
+      </v-tabs>
+
+      <v-tabs-items v-model="tab">
+        <v-tab-item v-for="(tab,i) in tabs" :key="i">
+            <component v-if="!loading" :pokemon="pokemon" :is="tab.component"></component>
+        </v-tab-item>
+      </v-tabs-items>
+
+      
       <!-- <pre>{{ pokemon }}</pre> -->
     </v-card>
   </div>
@@ -95,16 +88,29 @@
 
 <script>
 import Colors from "../../core/colors";
+import StatusTab from './PokemonTabs/StatsTab.vue'
 
 export default {
   name: "pokemon",
+  components: {
+    StatusTab
+  },
   data: function () {
     return {
+      tab: null,
+      tabs:[
+        {label:'Stats', component:'status-tab'},
+        {label:'About', component:''},
+        {label:'Location', component:''}
+      ],
       loading: false,
       pokemon: null,
     };
   },
   computed: {
+    pokemonType(){
+      return this.pokemon.types[0].type.name
+    },
     pokemonId() {
       return `#${this.pokemon.id.toString().padStart(3, "0")}`;
     },
@@ -115,34 +121,50 @@ export default {
       return Colors.backgroundTypeColors;
     },
     pokemonSprite() {
-      return this.pokemon.sprites.front_default;
+      if(this.pokemon.sprites.other.official_artwork)
+        return this.pokemon.sprites.other.official_artwork.front_default;
+      else if(this.pokemon.sprites.other.dream_world)
+        return this.pokemon.sprites.other.dream_world.front_default;
+      else
+        return this.pokemon.sprites.front_default
     },
   },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.fetchData();
-      next();
-    });
-  },
   methods: {
-    async fetchData() {
+    chipSvgMas(typeName){
+      return {
+        backgroundColor: 'white',
+        webkitMask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
+        mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`
+      }
+    },
+    fetchData() {
       this.loading = true;
-      await this.$api
+
+      this.$api
         .get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
         .then((response) => {
           this.pokemon = response.data;
+          
+          this.$api.get(`${this.pokemon.location_area_encounters}`)
+          .then((location) => {
+            this.pokemon.locations = location.data
+            this.loading = false;
+          })
         })
         .catch((e) => {
           this.errors.push(e);
+          this.loading = false;
         });
-      this.loading = false;
     },
   },
-  async created() {
-    await this.fetchData();
+  beforeMount() {
+     this.fetchData();
   },
 };
 </script>
 
 <style>
+.poke-tab{
+  background-color: blue;
+}
 </style>

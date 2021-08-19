@@ -7,6 +7,7 @@
 
 <script>
 export default {
+    name:'pokemon-list',
     data:function(){
         return{
             pokemons:[]

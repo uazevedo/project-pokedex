@@ -15,7 +15,5 @@ export default {
       pokemons:[]
     }
   },
-  components: {
-  }
 }
 </script>

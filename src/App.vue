@@ -5,7 +5,7 @@
         <v-navigation-drawer app>
           <router-link to="/pokemon">Pokemon</router-link> <br />
           <router-link to="/pokemon/1">Pokemon Detail</router-link> <br />
-          <router-link to="/home">Pokemon</router-link> <br />
+          <router-link to="/home">Home</router-link> <br />
         </v-navigation-drawer>
       </div>
       <v-main>
