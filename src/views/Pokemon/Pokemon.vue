@@ -88,12 +88,14 @@
 import Colors from "../../core/colors";
 const StatusTab = () => import('./PokemonTabs/StatsTab.vue');
 const AboutTab = () => import('./PokemonTabs/AboutTab.vue');
+const EvolutionTab = () => import('./PokemonTabs/EvolutionTab.vue');
 
 export default {
   name: "pokemon",
   components: {
     StatusTab,
-    AboutTab
+    AboutTab,
+    EvolutionTab
   },
   data: function () {
     return {
@@ -101,7 +103,7 @@ export default {
       tabs:[
         {label:'About', component:'about-tab'},
         {label:'Stats', component:'status-tab'},
-        {label:'Evolutions', component:''}
+        {label:'Evolutions', component:'evolution-tab'}
       ],
       loading: false,
       loadingSpecies: false,

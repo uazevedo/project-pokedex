@@ -1,5 +1,8 @@
 <template>
   <v-card-text>
+        <v-card-subtitle>
+            {{this.pokemon.species.data.flavor_text_entries[0].flavor_text.replace('\f','')}}
+        </v-card-subtitle>
     <v-list dense>
       <v-list-item-title
         class="text-h6"
@@ -44,8 +47,9 @@
                 <v-list-item
                   v-for="abilities in pokemon.abilities"
                   :key="abilities.ability.name"
+                  class="px-0"
                 >
-                  <v-list-item-content>
+                  <v-list-item-content class="px-0">
                     <v-list-item-title>
                       {{ abilities.ability.name }}
                     </v-list-item-title>
@@ -85,16 +89,6 @@
         </v-list-item>
       </template>
     </v-list>
-    <pre>{{
-      pokemon.species.data.evolution_chain.data.chain.species.name
-    }}</pre>
-    <pre>{{
-      pokemon.species.data.evolution_chain.data.chain.evolves_to[0].species.name
-    }}</pre>
-    <pre>{{
-      pokemon.species.data.evolution_chain.data.chain.evolves_to[0]
-        .evolves_to[0].species.name
-    }}</pre>
   </v-card-text>
 </template>
 <script>
