@@ -8,38 +8,44 @@
         <v-icon :color="colors.get(pokemonType)">mdi-pokeball</v-icon>
         Evolution Chain
       </v-list-item-title>
-      
-        <v-list-item class="grey--text text--darken-2">
-          <v-container>
-            <v-row>
-              <v-col md="auto" v-if="pokemonEvolutionChain.species">
-                {{ pokemonEvolutionChain.species.name }}    
-              </v-col>
-              <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-                {{ pokemonEvolutionChain.evolves_to[0].evolution_details[0].min_level }}    
-              </v-col>
-              <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-                {{ pokemonEvolutionChain.evolves_to[0].species.name }}
-              </v-col>
-            </v-row>
 
-            <v-row>
-              <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-                {{ pokemonEvolutionChain.evolves_to[0].species.name }}
-              </v-col>
-              <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-                {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].evolution_details[0].min_level }}    
-              </v-col>
-              <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-                {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name }}
-              </v-col>
-            </v-row>
-          </v-container>
-            
-          
-            
-        </v-list-item>
-      
+      <v-list-item class="grey--text text--darken-2">
+        <v-container>
+          <v-row>
+            <v-col md="auto" v-if="pokemonEvolutionChain.species">
+              {{ pokemonEvolutionChain.species.name }}
+            </v-col>
+            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+              Level
+              {{
+                pokemonEvolutionChain.evolves_to[0].evolution_details[0]
+                  .min_level
+              }}
+            </v-col>
+            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+              {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+              {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+            </v-col>
+            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+              Level
+              {{
+                pokemonEvolutionChain.evolves_to[0].evolves_to[0]
+                  .evolution_details[0].min_level
+              }}
+            </v-col>
+            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+              {{
+                pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name
+              }}
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-list-item>
     </v-list>
   </v-card-text>
 </template>
@@ -54,7 +60,7 @@ export default {
     return {};
   },
   computed: {
-    pokemonEvolutionChain(){
+    pokemonEvolutionChain() {
       return this.pokemon.species.data.evolution_chain.data.chain;
     },
     colors() {

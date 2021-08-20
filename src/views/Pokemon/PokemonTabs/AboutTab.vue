@@ -71,13 +71,14 @@
         <v-icon :color="colors.get(pokemonType)">mdi-pokemon-go</v-icon>
         Location
       </v-list-item-title>
-      <template>
+      <template v-if="pokemon.locations.lenght > 0">
         <v-list-item
           two-line
           v-for="(location, i) in pokemon.locations"
           :key="i"
           class="text-capitalize"
         >
+
           <v-list-item-content>
             <v-list-item-title>
               {{ shortedNameArea(location.location_area.name) }}
@@ -88,7 +89,13 @@
           </v-list-item-content>
         </v-list-item>
       </template>
+      <v-list-item-content v-else>
+            <v-list-item-title>
+                Location Not Found.
+            </v-list-item-title>
+        </v-list-item-content>
     </v-list>
+    
   </v-card-text>
 </template>
 <script>
@@ -122,10 +129,8 @@ export default {
       return versions.join(", ");
     },
     shortedNameArea(areaName) {
-      if (areaName) {
         let shortedName = areaName.split("-");
         return shortedName.join(" ").replace("area", "");
-      } else return "Location Not Found";
     },
   },
 };
