@@ -2,23 +2,22 @@
   <div>
     <v-card v-if="!loading" class="mx-auto">
       <v-sheet :color="bgElementColors.get(pokemonType)">
-        <v-row no-gutters align="center">
-          <router-link to="/pokemon">
+        <v-row no-gutters>
+          <v-col cols="6">
+            <router-link to="/pokemon">
             <v-btn depressed icon class="float-start">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
           </router-link>
-          <v-col cclass="text-center">
-            <v-list-item three-line>
-              <v-list-item-content>
+            <v-list-item three-line class="px-0 pt-12">
+              <div>
                 <v-list-item-subtitle
-                  class="pt-12 pb-0 font-weight-bold pl-5 text-h6"
+                  class="pt-12 pb-0 font-weight-bold text-h6"
                 >
                   <span color="white" class="text--secondary" >{{ pokemonId }}</span>
                 </v-list-item-subtitle>
                 <v-list-item-title
                   class="
-                    pl-5
                     pb-0
                     text-capitalize
                     white--text
@@ -28,11 +27,11 @@
                 >
                   {{ pokemon.name }}
                 </v-list-item-title>
-                <v-list-item-subtitle class="pl-5">
+                <v-list-item-subtitle>
                   <v-chip-group>
                     <v-chip
                       label
-                      class="text-capitalize px-2 font-weight-bold"
+                      class="text-capitalize font-weight-bold"
                       text-color="white"
                       v-for="(type, i) in pokemon.types"
                       :key="i"
@@ -40,6 +39,7 @@
                     >
                       <v-avatar dark class="mr-1">
                         <v-img 
+                          contain
                           :style="chipSvgMas(type.type.name)"
                         ></v-img>
                       </v-avatar>
@@ -47,16 +47,17 @@
                     </v-chip>
                   </v-chip-group>
                 </v-list-item-subtitle>
-              </v-list-item-content>
+              </div>
             </v-list-item>
           </v-col>
 
           <v-col cols="6">
             <v-img
-              max-height="245"
+              min-height="200"
+              max-height="100%"
               :src="pokemonSprite"
               :alt="pokemon.name"
-              class="pr-12 ma-10"
+              class="ma-10"
               contain
             >
             </v-img>
@@ -65,7 +66,7 @@
       </v-sheet>
     </v-card>
 
-    <v-card color="white" class="mx-auto rounded-xl mt-n5" v-if="!loading">
+    <v-card color="white" class="mx-auto rounded-xl mt-n5" v-if="!loading" min-height="430">
 
       <v-tabs
       fixed-tabs
@@ -79,35 +80,42 @@
             <component v-if="!loading" :pokemon="pokemon" :is="tab.component"></component>
         </v-tab-item>
       </v-tabs-items>
-
-      
-      <!-- <pre>{{ pokemon }}</pre> -->
+      <!-- <pre>{{ pokemon.locations }}</pre> -->
     </v-card>
   </div>
 </template>
 
 <script>
 import Colors from "../../core/colors";
-import StatusTab from './PokemonTabs/StatsTab.vue'
+const StatusTab = () => import('./PokemonTabs/StatsTab.vue');
+const AboutTab = () => import('./PokemonTabs/AboutTab.vue');
+const EvolutionTab = () => import('./PokemonTabs/EvolutionTab.vue');
 
 export default {
   name: "pokemon",
   components: {
-    StatusTab
+    StatusTab,
+    AboutTab,
+    EvolutionTab
   },
   data: function () {
     return {
       tab: null,
       tabs:[
+        {label:'About', component:'about-tab'},
         {label:'Stats', component:'status-tab'},
-        {label:'About', component:''},
-        {label:'Location', component:''}
+        {label:'Evolutions', component:'evolution-tab'}
       ],
       loading: false,
+      loadingSpecies: false,
+      loadingLocations: false,
       pokemon: null,
     };
   },
   computed: {
+    activePokemon(){
+      return this.$store.getters.pokemon
+    },
     pokemonType(){
       return this.pokemon.types[0].type.name
     },
@@ -121,12 +129,15 @@ export default {
       return Colors.backgroundTypeColors;
     },
     pokemonSprite() {
+      let pokemonSprite;
       if(this.pokemon.sprites.other.official_artwork)
-        return this.pokemon.sprites.other.official_artwork.front_default;
+        pokemonSprite = this.pokemon.sprites.other.official_artwork.front_default;
       else if(this.pokemon.sprites.other.dream_world)
-        return this.pokemon.sprites.other.dream_world.front_default;
+        pokemonSprite = this.pokemon.sprites.other.dream_world.front_default;
       else
-        return this.pokemon.sprites.front_default
+        pokemonSprite = this.pokemon.sprites.front_default
+
+        return pokemonSprite;
     },
   },
   methods: {
@@ -137,29 +148,44 @@ export default {
         mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`
       }
     },
+    fetchData2(){
+      const pokemon1 = this.$store.pokemon;
+      console.log(pokemon1);
+    },
     fetchData() {
       this.loading = true;
-
+      // POKEMON
       this.$api
-        .get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
-        .then((response) => {
-          this.pokemon = response.data;
-          
-          this.$api.get(`${this.pokemon.location_area_encounters}`)
-          .then((location) => {
-            this.pokemon.locations = location.data
-            this.loading = false;
+      .get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
+      .then((response) => {
+        this.pokemon = response.data;
+        // LOCAIS
+        this.$api.get(`${this.pokemon.location_area_encounters}`)
+        .then((location) => {
+          this.pokemon.locations = location.data
+          // ESPECIES
+          this.$api.get(`${this.pokemon.species.url}`)
+          .then((specie) => {
+            this.pokemon.species.data = (({evolution_chain,flavor_text_entries, genera})=>({evolution_chain,flavor_text_entries, genera}))(specie.data)
+            // EVOLUTION CHAIN
+            this.$api.get(`${this.pokemon.species.data.evolution_chain.url}`)
+            .then((evolutions) => {
+              this.pokemon.species.data.evolution_chain.data = evolutions.data
+                this.loading = false;
+            })
           })
         })
-        .catch((e) => {
-          this.errors.push(e);
-          this.loading = false;
-        });
+      })
+      .catch((e) => {
+        this.errors.push(e);
+        this.loading = false;
+      });
+        
     },
   },
   beforeMount() {
      this.fetchData();
-  },
+  }
 };
 </script>
 

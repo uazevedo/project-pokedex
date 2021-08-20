@@ -41,7 +41,7 @@ backgroundTypeColors.set(  'psychic','#FF6568');
 backgroundTypeColors.set(     'rock','#D4C294');
 
 backgroundTypeColors.set(    'steel','#4C91B2');
-backgroundTypeColors.set(    'water','#58ABG6');
+backgroundTypeColors.set(    'water','#58ABF6');
 
 // ELEMETAL COLORS (WATER, FIRE, BUG...)
 export const elementTypeColors = new Map();
