@@ -17,7 +17,6 @@ export default {
       state.pokemonList = pokemonList;
     },
     setPokemonLocations(state, newLocations) {
-      // Vue.set(state.pokemon,'locations',newLocations)
       state.pokemon = { ...state.pokemon, locations: newLocations };
     },
     setSpecies(state, specData) {

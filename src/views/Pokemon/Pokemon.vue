@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-card v-if="!loading" class="mx-auto">
-      <v-sheet :color="bgElementColors.get(pokemonType)">
+      <v-sheet :color="bgElementColors.get(pokemonType)" class="skewBefore">
         <v-row no-gutters>
           <v-col cols="6">
             <router-link to="/pokemon">
               <v-btn depressed icon class="float-start">
-                <v-icon>mdi-arrow-left</v-icon>
+                <v-icon color="white">mdi-arrow-left</v-icon>
               </v-btn>
             </router-link>
             <v-list-item three-line class="px-0 pt-12">
@@ -59,7 +59,7 @@
               max-height="100%"
               :src="getPokemonSprite"
               :alt="pokemon.name"
-              class="ma-10"
+              class="ma-10 imgPokemon"
               contain
             >
             </v-img>

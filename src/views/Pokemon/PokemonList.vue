@@ -27,7 +27,6 @@
             :color="colors.backgroundTypeColors.get(pokemonType(pokemon))"
             class="skewBefore"
           >
-            <image src="../../assets/patterns/6x3.svg" class="imgMask"></image>
             <v-row no-gutters>
               <v-col cols="6">
                 <v-list-item three-line class="pl-12 pt-12">
@@ -79,6 +78,7 @@
                   min-height="180"
                   max-height="200"
                   :src="pokemonSprite(pokemon)"
+                  :lazy-src="pokemonSprite(pokemon)"
                   :alt="pokemon.name"
                   class="ma-10 imgPokemon"
                   contain
@@ -150,14 +150,14 @@ export default {
       };
     },
     pokemonSprite(pokemon) {
-      let pokemonSprite;
-      if (pokemon.sprites.other.official_artwork)
-        pokemonSprite = pokemon.sprites.other.official_artwork.front_default;
-      else if (pokemon.sprites.other.dream_world)
-        pokemonSprite = pokemon.sprites.other.dream_world.front_default;
-      else pokemonSprite = pokemon.sprites.front_default;
-
-      return pokemonSprite;
+      const pokemonSprite = new Image();
+      if (pokemon.sprites.other.official_artwork){
+        pokemonSprite.src = pokemon.sprites.other.official_artwork.front_default;
+      } else if (pokemon.sprites.other.dream_world)
+        pokemonSprite.src = pokemon.sprites.other.dream_world.front_default;
+      else pokemonSprite.src = pokemon.sprites.front_default;
+      pokemon.sprites.image = pokemonSprite
+      return pokemonSprite.src;
     },
     fetchListData() {
       this.pokemonList.results.forEach((element) => {
@@ -198,52 +198,4 @@ export default {
 </script>
 
 <style>
-.skewBefore{
-  position:relative;
-  background:#122936;
-  border-radius:20px;
-  overflow:hidden;
-  white-space: nowrap;
-}
-.skewBefore::before{
-  content:'';
-  position: absolute;
-  top: -80%;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.2);
-  transform: skewY(345deg);
-  transition: 1s;
-}
-.skewBefore:hover::before{
-  top:-70%;
-  transform:skewY(390deg);
-}
-
-.skewBefore::after{
-  content:'Pokémon';
-  position:absolute;
-  bottom: 0;
-  left:0;
-  font-weight:600;
-  font-size:10rem;
-  color:rgba(0,0,0,0.05);
-}
-
-.skewBefore .imgPokemon{
-  position:relative;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.5s;
-  max-width:100%;
-  max-height: 100%;
-  z-index:1;
-}
-
-.skewBefore:hover .imgPokemon{
-  max-width:60%;
-  transition: 0.5s;
-}
-
 </style>

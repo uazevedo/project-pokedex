@@ -11,7 +11,8 @@ const baseRoutes = [
     name: 'Home',
     component: Home
   },
-  { path: '*', redirect: '/' }
+  { path: '*', redirect: '/pokemon' }
+  
 ]
 
 const routes = baseRoutes.concat(PokemonRouter)

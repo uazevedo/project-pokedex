@@ -13,7 +13,9 @@
         <v-container v-if="pokemonEvolutionChain.evolves_to.length > 0">
           <v-row>
             <v-col md="auto" v-if="pokemonEvolutionChain.species">
+              <router-link :key="$router.path" :to="`/pokemon/${pokemonEvolutionChain.species.name}`">
               {{ pokemonEvolutionChain.species.name }}
+              </router-link>
             </v-col>
 
             <v-spacer></v-spacer>
@@ -26,13 +28,17 @@
             <v-spacer></v-spacer>
 
             <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-              {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+              <router-link :to="`/pokemon/${pokemonEvolutionChain.evolves_to[0].species.name}`">
+                {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+              </router-link>
             </v-col>
           </v-row>
 
           <v-row v-if="pokemonEvolutionChain.evolves_to[0].evolves_to.length > 0">
             <v-col md="auto">
-              {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+              <router-link :to="`/pokemon/${pokemonEvolutionChain.evolves_to[0].species.name}`">
+                {{ pokemonEvolutionChain.evolves_to[0].species.name }}
+              </router-link>
             </v-col>
 
             <v-spacer></v-spacer>
@@ -45,7 +51,9 @@
             <v-spacer></v-spacer>
 
             <v-col md="auto">
-              {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name }}
+              <router-link :to="`/pokemon/${pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name}`">
+                {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name }}
+              </router-link>
             </v-col>
           </v-row>
         </v-container>
@@ -68,7 +76,7 @@ export default {
       return this.$store.getters.pokemon;
     },
     pokemonEvolutionChain() {
-      return this.pokemon.evolution_chain.chain;
+      return this.pokemon.evolution_chain ? this.pokemon.evolution_chain.chain : '';
     },
     colors() {
       return Colors.elementTypeColors;
@@ -78,6 +86,9 @@ export default {
     },
   },
   methods: {
+    searchPokemon(pokemon){
+      this.$router.push({path:`/pokemon/${pokemon.toLowerCase()}`})
+    },
     shortedNameArea(areaName) {
       if (areaName) {
         let shortedName = areaName.split("-");
