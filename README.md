@@ -8,8 +8,6 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/uazevedo/project-pokedex?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/uazevedo/project-pokedex?style=for-the-badge)
 
-<img src="exemplo-image.png" alt="exemplo imagem">
-
 > Pokédex que permite consultar mais de 1000 pokemons, exibe os locais de encontro, versões de jogo, status, evoluções e tipos.
 
 ### Ajustes e melhorias
