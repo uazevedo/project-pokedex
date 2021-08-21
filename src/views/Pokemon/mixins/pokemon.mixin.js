@@ -2,6 +2,12 @@ import colors from "../../../core/colors";
 
 const pokemonMixins = {
   computed: {
+    pokemonList() {
+      return this.$store.getters.pokemonList;
+    },
+    colors() {
+      return colors;
+    },
     pokemon() {
       return this.$store.getters.pokemon;
     },
@@ -10,14 +16,6 @@ const pokemonMixins = {
     },
     bgElementColors() {
       return colors.backgroundTypeColors;
-    },
-    pokemonType() {
-      return this.pokemon.types ? this.pokemon.types[0].type.name : "dark";
-    },
-    pokemonId() {
-      return this.pokemon.id
-        ? `#${this.pokemon.id.toString().padStart(3, "0")}`
-        : "Pokemon Not Found";
     },
     getPokemonSprite() {
       if (this.pokemon.sprites) {
@@ -31,15 +29,23 @@ const pokemonMixins = {
         return pokemonSprite;
       }
       return "";
-    }
+    },
   },
   methods: {
-    chipSvgMas(typeName) {
+    chipSvgType(typeName) {
       return {
         backgroundColor: "white",
         webkitMask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
         mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
       };
+    },
+    pokemonType(pokemon) {
+        return pokemon.types ? pokemon.types[0].type.name : "dark";
+    },
+    pokemonId(pokemon) {
+        return pokemon.id
+        ? `#${pokemon.id.toString().padStart(3, "0")}`
+        : "Pokemon Not Found";
     },
   },
 };

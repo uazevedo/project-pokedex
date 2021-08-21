@@ -62,7 +62,7 @@
                           <v-avatar dark class="mr-1">
                             <v-img
                               contain
-                              :style="chipSvgMas(type.type.name)"
+                              :style="chipSvgType(type.type.name)"
                             ></v-img>
                           </v-avatar>
                           {{ type.type.name }}
@@ -99,10 +99,11 @@
 
 <script>
 import Config from '../../core/config'
-import Colors from "../../core/colors";
+import pokemonMixin from './mixins/pokemon.mixin'
 
 export default {
   name: "pokemon-list",
+  mixins:[pokemonMixin],
   data: function () {
     return {
       search:'',
@@ -115,12 +116,7 @@ export default {
     baseUrl(){
       return this.Config.baseApiUrl;
     },
-    colors() {
-      return Colors;
-    },
-    pokemonList() {
-      return this.$store.getters.pokemonList;
-    },
+    
   },
   methods: {
     searchPokemon(){
@@ -136,19 +132,7 @@ export default {
         this.fetchListData();
       });
     },
-    pokemonType(pokemon) {
-      return pokemon.types[0].type.name;
-    },
-    pokemonId(pokemon) {
-      return `#${pokemon.id.toString().padStart(3, "0")}`;
-    },
-    chipSvgMas(typeName) {
-      return {
-        backgroundColor: "white",
-        webkitMask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
-        mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
-      };
-    },
+    
     pokemonSprite(pokemon) {
       const pokemonSprite = new Image();
       if (pokemon.sprites.other.official_artwork){

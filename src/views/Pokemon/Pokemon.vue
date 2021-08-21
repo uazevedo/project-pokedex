@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card v-if="!loading" class="mx-auto">
-      <v-sheet :color="bgElementColors.get(pokemonType)" class="skewBefore">
+      <v-sheet :color="bgElementColors.get(pokemonType(pokemon))" class="skewBefore">
         <v-row no-gutters>
           <v-col cols="6">
             <router-link to="/pokemon">
@@ -15,7 +15,7 @@
                   class="pt-12 pb-0 font-weight-bold text-h6"
                 >
                   <span color="white" class="text--secondary">{{
-                    pokemonId
+                    pokemonId(pokemon)
                   }}</span>
                 </v-list-item-subtitle>
                 <v-list-item-title
@@ -42,7 +42,7 @@
                       <v-avatar dark class="mr-1">
                         <v-img
                           contain
-                          :style="chipSvgMas(type.type.name)"
+                          :style="chipSvgType(type.type.name)"
                         ></v-img>
                       </v-avatar>
                       {{ type.type.name }}

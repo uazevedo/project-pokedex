@@ -14,6 +14,7 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
+- [x] Criar mixin para reuso de métodos repetidos
 - [ ] Extrair componentes menores (img-containers, buttons, pokemon card header...)
 - [ ] Carregar a lista com todos os pokemons e realizar apenas o carregamento das imagens e dados complementares a medida que a navegação for sendo realizada.
 - [ ] Pré carregar e manter 1 página a frente e atrás.
