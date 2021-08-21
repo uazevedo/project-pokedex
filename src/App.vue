@@ -70,7 +70,7 @@ export default {
   justify-content: center;
   align-items: center;
   transition: 0.5s;
-  max-width:100%;
+  max-width:50%;
   max-height: 100%;
   z-index:1;
 }
