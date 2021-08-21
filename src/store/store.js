@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import store from './pokemons'
+import store from '../views/Pokemon/store/pokemon.store'
 
 Vue.use(Vuex);
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import PokemonRouter from '../views/Pokemon/PokemonRouter'
+import PokemonRouter from '../views/Pokemon/pokemon.router'
 
 Vue.use(VueRouter)
 
