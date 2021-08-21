@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import axios from "axios";
 import config from "../core/config";
 
-Vue.use({
-  install(Vue){
-      Vue.prototype.$api = axios.create({
-          baseUrl:config.baseApiUrl
-      })
-  }
+const api = axios.create({
+  baseURL: config.baseApiUrl,
+  timeout: 5000,
 });
+
+export default api;

@@ -9,42 +9,47 @@
         Evolution Chain
       </v-list-item-title>
 
-      <v-list-item class="grey--text text--darken-2">
-        <v-container>
+      <v-list-item class="grey--text text--darken-2 text-capitalize">
+        <v-container v-if="pokemonEvolutionChain.evolves_to.length > 0">
           <v-row>
             <v-col md="auto" v-if="pokemonEvolutionChain.species">
               {{ pokemonEvolutionChain.species.name }}
             </v-col>
-            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+
+            <v-spacer></v-spacer>
+
+            <v-col md="auto" >
               Level
-              {{
-                pokemonEvolutionChain.evolves_to[0].evolution_details[0]
-                  .min_level
-              }}
+              {{ pokemonEvolutionChain.evolves_to[0].evolution_details[0].min_level }}
             </v-col>
+
+            <v-spacer></v-spacer>
+
             <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
               {{ pokemonEvolutionChain.evolves_to[0].species.name }}
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+          <v-row v-if="pokemonEvolutionChain.evolves_to[0].evolves_to.length > 0">
+            <v-col md="auto">
               {{ pokemonEvolutionChain.evolves_to[0].species.name }}
             </v-col>
-            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
+
+            <v-spacer></v-spacer>
+
+            <v-col md="auto" >
               Level
-              {{
-                pokemonEvolutionChain.evolves_to[0].evolves_to[0]
-                  .evolution_details[0].min_level
-              }}
+              {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].evolution_details[0].min_level }}
             </v-col>
-            <v-col md="auto" v-if="pokemonEvolutionChain.evolves_to.length > 0">
-              {{
-                pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name
-              }}
+
+            <v-spacer></v-spacer>
+
+            <v-col md="auto">
+              {{ pokemonEvolutionChain.evolves_to[0].evolves_to[0].species.name }}
             </v-col>
           </v-row>
         </v-container>
+        <v-list-item-title v-else>Evolution Not Found</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-card-text>
@@ -55,13 +60,15 @@ import Colors from "../../../core/colors";
 
 export default {
   name: "evolution-tab",
-  props: ["pokemon"],
   data: function() {
     return {};
   },
   computed: {
+    pokemon(){
+      return this.$store.getters.pokemon;
+    },
     pokemonEvolutionChain() {
-      return this.pokemon.species.data.evolution_chain.data.chain;
+      return this.pokemon.evolution_chain.chain;
     },
     colors() {
       return Colors.elementTypeColors;
@@ -86,5 +93,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

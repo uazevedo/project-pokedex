@@ -5,16 +5,18 @@
         <v-row no-gutters>
           <v-col cols="6">
             <router-link to="/pokemon">
-            <v-btn depressed icon class="float-start">
-              <v-icon>mdi-arrow-left</v-icon>
-            </v-btn>
-          </router-link>
+              <v-btn depressed icon class="float-start">
+                <v-icon>mdi-arrow-left</v-icon>
+              </v-btn>
+            </router-link>
             <v-list-item three-line class="px-0 pt-12">
               <div>
                 <v-list-item-subtitle
                   class="pt-12 pb-0 font-weight-bold text-h6"
                 >
-                  <span color="white" class="text--secondary" >{{ pokemonId }}</span>
+                  <span color="white" class="text--secondary">{{
+                    pokemonId
+                  }}</span>
                 </v-list-item-subtitle>
                 <v-list-item-title
                   class="
@@ -38,7 +40,7 @@
                       :color="elementColors.get(type.type.name)"
                     >
                       <v-avatar dark class="mr-1">
-                        <v-img 
+                        <v-img
                           contain
                           :style="chipSvgMas(type.type.name)"
                         ></v-img>
@@ -55,7 +57,7 @@
             <v-img
               min-height="200"
               max-height="100%"
-              :src="pokemonSprite"
+              :src="getPokemonSprite"
               :alt="pokemon.name"
               class="ma-10"
               contain
@@ -66,131 +68,106 @@
       </v-sheet>
     </v-card>
 
-    <v-card color="white" class="mx-auto rounded-xl mt-n5" v-if="!loading" min-height="430">
-
-      <v-tabs
-      fixed-tabs
-      center-active
-      v-model="tab">
-        <v-tab v-for="(tab,i) in tabs" :key="i">{{tab.label}}</v-tab>
+    <v-card
+      color="white"
+      class="mx-auto rounded-xl mt-n5"
+      v-if="!loading"
+      min-height="430"
+    >
+      <v-tabs fixed-tabs center-active v-model="tab">
+        <v-tab v-for="(tab, i) in tabs" :key="i">{{ tab.label }}</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
-        <v-tab-item v-for="(tab,i) in tabs" :key="i">
-            <component v-if="!loading" :pokemon="pokemon" :is="tab.component"></component>
+        <v-tab-item v-for="(tab, i) in tabs" :key="i">
+          <component
+            v-if="!loading"
+            :pokemon="pokemon"
+            :is="tab.component"
+          ></component>
         </v-tab-item>
       </v-tabs-items>
-      <!-- <pre>{{ pokemon.locations }}</pre> -->
     </v-card>
   </div>
 </template>
 
 <script>
 import Colors from "../../core/colors";
-const StatusTab = () => import('./PokemonTabs/StatsTab.vue');
-const AboutTab = () => import('./PokemonTabs/AboutTab.vue');
-const EvolutionTab = () => import('./PokemonTabs/EvolutionTab.vue');
+const StatusTab = () => import("./PokemonTabs/StatsTab.vue");
+const AboutTab = () => import("./PokemonTabs/AboutTab.vue");
+const EvolutionTab = () => import("./PokemonTabs/EvolutionTab.vue");
 
 export default {
   name: "pokemon",
   components: {
     StatusTab,
     AboutTab,
-    EvolutionTab
+    EvolutionTab,
   },
   data: function () {
     return {
       tab: null,
-      tabs:[
-        {label:'About', component:'about-tab'},
-        {label:'Stats', component:'status-tab'},
-        {label:'Evolutions', component:'evolution-tab'}
+      tabs: [
+        { label: "About", component: "about-tab" },
+        { label: "Stats", component: "status-tab" },
+        { label: "Evolutions", component: "evolution-tab" },
       ],
       loading: false,
       loadingSpecies: false,
       loadingLocations: false,
-      pokemon: null,
+      // pokemon: null,
     };
   },
   computed: {
-    activePokemon(){
-      return this.$store.getters.pokemon
+    pokemon() {
+      return this.$store.getters.pokemon;
     },
-    pokemonType(){
-      return this.pokemon.types[0].type.name
-    },
-    pokemonId() {
-      return `#${this.pokemon.id.toString().padStart(3, "0")}`;
-    },
+
     elementColors() {
       return Colors.elementTypeColors;
     },
     bgElementColors() {
       return Colors.backgroundTypeColors;
     },
-    pokemonSprite() {
-      let pokemonSprite;
-      if(this.pokemon.sprites.other.official_artwork)
-        pokemonSprite = this.pokemon.sprites.other.official_artwork.front_default;
-      else if(this.pokemon.sprites.other.dream_world)
-        pokemonSprite = this.pokemon.sprites.other.dream_world.front_default;
-      else
-        pokemonSprite = this.pokemon.sprites.front_default
-
+    pokemonType() {
+      return this.pokemon.types ? this.pokemon.types[0].type.name : "dark";
+    },
+    pokemonId() {
+      return this.pokemon.id
+        ? `#${this.pokemon.id.toString().padStart(3, "0")}`
+        : "Pokemon Not Found";
+    },
+    getPokemonSprite() {
+      if (this.pokemon.sprites) {
+        let pokemonSprite;
+        if (this.pokemon.sprites.other.official_artwork)
+          pokemonSprite =
+            this.pokemon.sprites.other.official_artwork.front_default;
+        else if (this.pokemon.sprites.other.dream_world)
+          pokemonSprite = this.pokemon.sprites.other.dream_world.front_default;
+        else pokemonSprite = this.pokemon.sprites.front_default;
         return pokemonSprite;
+      }
+      return "";
     },
   },
   methods: {
-    chipSvgMas(typeName){
+    chipSvgMas(typeName) {
       return {
-        backgroundColor: 'white',
+        backgroundColor: "white",
         webkitMask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
-        mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`
-      }
-    },
-    fetchData2(){
-      const pokemon1 = this.$store.pokemon;
-      console.log(pokemon1);
+        mask: `url(${require(`@/assets/types/${typeName}.svg`)}) no-repeat center`,
+      };
     },
     fetchData() {
-      this.loading = true;
-      // POKEMON
-      this.$api
-      .get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
-      .then((response) => {
-        this.pokemon = response.data;
-        // LOCAIS
-        this.$api.get(`${this.pokemon.location_area_encounters}`)
-        .then((location) => {
-          this.pokemon.locations = location.data
-          // ESPECIES
-          this.$api.get(`${this.pokemon.species.url}`)
-          .then((specie) => {
-            this.pokemon.species.data = (({evolution_chain,flavor_text_entries, genera})=>({evolution_chain,flavor_text_entries, genera}))(specie.data)
-            // EVOLUTION CHAIN
-            this.$api.get(`${this.pokemon.species.data.evolution_chain.url}`)
-            .then((evolutions) => {
-              this.pokemon.species.data.evolution_chain.data = evolutions.data
-                this.loading = false;
-            })
-          })
-        })
-      })
-      .catch((e) => {
-        this.errors.push(e);
-        this.loading = false;
-      });
-        
+      this.$store.dispatch("initPokemon", this.$route.params.id); //.then(() => this.loading = false);
     },
   },
-  beforeMount() {
-     this.fetchData();
-  }
+  created() {
+    this.fetchData();
+  },
 };
 </script>
 
 <style>
-.poke-tab{
-  background-color: blue;
-}
 </style>

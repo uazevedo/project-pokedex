@@ -21,12 +21,6 @@
             {{ stats.base_stat }}
           </v-list-item-subtitle>
           <v-spacer></v-spacer>
-          <v-list-item-subtitle>
-            100
-          </v-list-item-subtitle>
-          <v-list-item-subtitle>
-            200
-          </v-list-item-subtitle>
         </v-list-item>
       </v-list-item-group>
     </v-list>

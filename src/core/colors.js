@@ -68,4 +68,4 @@ elementTypeColors.set(     'rock','#BAAB82');
 elementTypeColors.set(    'steel','#417D9A');
 elementTypeColors.set(    'water','#4A90DA');
 
-export default { elementTypeColors, backgroundTypeColors,weightColors,heightColors }
+export default { elementTypeColors, backgroundTypeColors, buttonColors,weightColors,heightColors }

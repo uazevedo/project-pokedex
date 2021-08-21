@@ -1,7 +1,7 @@
 <template>
   <v-card-text>
         <v-card-subtitle>
-            {{this.pokemon.species.data.flavor_text_entries[0].flavor_text.replace('\f','')}}
+            {{ pokemonFlavorText }}
         </v-card-subtitle>
     <v-list dense>
       <v-list-item-title
@@ -9,7 +9,7 @@
         :style="{ color: colors.get(pokemonType) }"
       >
         <v-icon :color="colors.get(pokemonType)">mdi-pokeball</v-icon>
-        Pokemon Data
+        Pokémon Data
       </v-list-item-title>
       <template>
         <v-list-item class="text-capitalize">
@@ -71,7 +71,7 @@
         <v-icon :color="colors.get(pokemonType)">mdi-pokemon-go</v-icon>
         Location
       </v-list-item-title>
-      <template v-if="pokemon.locations.lenght > 0">
+      <template v-if="pokemon.locations">
         <v-list-item
           two-line
           v-for="(location, i) in pokemon.locations"
@@ -95,7 +95,6 @@
             </v-list-item-title>
         </v-list-item-content>
     </v-list>
-    
   </v-card-text>
 </template>
 <script>
@@ -103,22 +102,30 @@ import Colors from "../../../core/colors";
 
 export default {
   name: "about-tab",
-  props: ["pokemon"],
   data: function() {
     return {};
   },
   computed: {
-    pokemonSpecie() {
-      const specie = this.pokemon.species.data.genera.filter(
-        (t) => t.language.name == "en"
-      );
-      return specie[0].genus;
+    pokemon(){
+      return this.$store.getters.pokemon
+    },
+    pokemonFlavorText(){
+      return this.pokemon.specieData ? this.pokemon.specieData.flavor_text_entries[0].flavor_text.replace('\f','') : 'Description Not Found'
+    },
+    pokemonSpecie(){
+      if(this.pokemon.specieData){
+        const specie = this.pokemon.specieData.genera.filter(
+          (t) => t.language.name == "en"
+        );
+        return specie[0].genus;
+      }
+      return 'Specie not found'
     },
     colors() {
       return Colors.backgroundTypeColors;
     },
     pokemonType() {
-      return this.pokemon.types[0].type.name;
+      return this.pokemon.types ? this.pokemon.types[0].type.name : 'dark';
     },
   },
   methods: {
