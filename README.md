@@ -31,17 +31,17 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 Para instalar o #project-pokedex, siga estas etapas:
 
 
-## Project setup
+## Iniciando o projeto
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Executando
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compilando para produção
 ```
 npm run build
 ```

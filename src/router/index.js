@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import PokemonRouter from '../views/Pokemon/pokemon.router'
 
 Vue.use(VueRouter)
@@ -8,8 +7,7 @@ Vue.use(VueRouter)
 const baseRoutes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/pokemon'
   },
   { path: '*', redirect: '/pokemon' }
   
